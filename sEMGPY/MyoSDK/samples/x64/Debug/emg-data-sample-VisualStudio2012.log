@@ -1,0 +1,8 @@
+﻿  emg-data-sample.cpp
+C:\Users\Huris\Desktop\myo-sdk-win-0.9.0\include\myo\cxx\detail\ThrowOnError.hpp(39,1): warning C4297: “myo::ThrowOnError::~ThrowOnError”: 假定函数不引发异常，但确实发生了
+C:\Users\Huris\Desktop\myo-sdk-win-0.9.0\include\myo\cxx\detail\ThrowOnError.hpp(39,1): message : 析构函数或释放器具有一个(可能是隐含的)非引发异常规范
+C:\Users\Huris\Desktop\myo-sdk-win-0.9.0\include\myo\cxx\detail\ThrowOnError.hpp(45,1): warning C4297: “myo::ThrowOnError::~ThrowOnError”: 假定函数不引发异常，但确实发生了
+C:\Users\Huris\Desktop\myo-sdk-win-0.9.0\include\myo\cxx\detail\ThrowOnError.hpp(45,1): message : 析构函数或释放器具有一个(可能是隐含的)非引发异常规范
+  emg-data-sample-VisualStudio2012.vcxproj -> C:\Users\Huris\Desktop\myo-sdk-win-0.9.0\samples\x64\Debug\emg-data-sample.exe
+  Copy required dlls to output directory
+  已复制         1 个文件。
