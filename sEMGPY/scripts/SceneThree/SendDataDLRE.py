@@ -5,15 +5,21 @@ import datetime
 import socket
 import joblib
 import warnings
+from tsai.inference import load_learner
+
 
 warnings.filterwarnings(action="ignore")
 
 from pyomyo import Myo, emg_mode
 
-# 加载集成学习模型
-models = joblib.load('models/sEMGML.pkl')
+# 加载深度学习回归模型
+models = {}
+models['1MLSTM_FCN'] = load_learner('./models/1MLSTM_FCNRegression.pkl', cpu=False)
+models['4LSTM'] = load_learner('./models/4LSTMRegression.pkl', cpu=False)
+models['5LSTM'] = load_learner('./models/5LSTMRegression.pkl', cpu=False)
+
 # 初始化最优权重值
-best_weight = np.array([0.42, 0.04, 0.14, 0.11, 0.09, 0.2])
+best_weight = np.array([0.24, 0.26, 0.50])
 
 q = multiprocessing.Queue()
 
@@ -66,12 +72,12 @@ if __name__ == "__main__":
             # sEMG = np.array([84, 268, 736, 161, 57, 285, 76, 209]).reshape(1, -1)
             # # [0.43085063, 0.30477173, 0.22223776, 0.22317647, 0.28845479, 0.37974083]
 
-            sEMG = np.array(q.get()).reshape(1, -1)
+            sEMG = np.array(q.get()).reshape(1, 1, 8)
 
             # 集成学习: SVR, LGB, RF, GBRT, XGB, Bagging
             re = 0
             for i, j in enumerate(models):
-                re += best_weight[i] * models[j].predict(sEMG)
+                re += best_weight[i] * models[j].get_X_preds(sEMG)
 
             # 发送过去
             client_executor.send(bytes(repr(round(re[0], 2)).encode('utf-8')))
