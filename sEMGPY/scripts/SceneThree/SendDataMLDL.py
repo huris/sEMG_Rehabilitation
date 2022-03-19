@@ -1,4 +1,3 @@
-# Preprocessing tools
 import math
 import time
 import numpy as np
@@ -8,30 +7,28 @@ import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 from tsai.all import *
-from tsai.inference import load_learner
 
+# import data
 import joblib
+
 import os, sys
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import warnings
+
 warnings.filterwarnings(action="ignore")
 
-
-# 不打印
-sys.stdout = open(os.devnull, 'w')
-# 打印
-# sys.stdout = sys.__stdout__
-
-
+# %% 导入数据
+PATH = "scripts/SceneThree/"
 cols = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Rect", "Time_ns"]
 
-train1_data = pd.read_csv("data/Train1.csv", header=None)
-train2_data = pd.read_csv("data/Train2.csv", header=None)
-train3_data = pd.read_csv("data/Train3.csv", header=None)
-train_data = pd.read_csv("data/Train.csv", header=None)
+train1_data = pd.read_csv(PATH + "data/Train1.csv", header=None)
+train2_data = pd.read_csv(PATH + "data/Train2.csv", header=None)
+train3_data = pd.read_csv(PATH + "data/Train3.csv", header=None)
+train_data = pd.read_csv(PATH + "data/Train.csv", header=None)
 
-test_data = pd.read_csv("data/Test.csv", header=None)
-valid_data = pd.read_csv("data/Valid.csv", header=None)
+test_data = pd.read_csv(PATH + "data/Test.csv", header=None)
+valid_data = pd.read_csv(PATH + "data/Valid.csv", header=None)
 
 train_data.columns = test_data.columns = valid_data.columns = cols
 
@@ -56,27 +53,42 @@ valid_two_features = pd.concat([valid_data.Three, valid_data.Four], axis=1, igno
 sEMG_all = pd.concat([train_all, test_all], axis=0, ignore_index=True, sort=False)
 
 train_all.columns = test_all.columns = valid_all.columns = sEMG_all.columns = cols[:-1]
-# train_features, train_labels, train_all, sEMG_all, train_six_features, train_two_features
 
-
-# ML
+# %% 机器学习模型
 # 加载机器学习模型
-MLModels = joblib.load('models/sEMGML.pkl')
+MLModels = joblib.load(PATH + 'models/sEMGML.pkl')
 # 初始化最优权重值
 MLWeight = np.array([0.42, 0.04, 0.14, 0.11, 0.09, 0.2])
 
+# %% 深度学习模型
+from tsai.inference import load_learner
 
-# DL
 # 加载深度学习回归模型
 DLModels = {}
-DLModels['10LSTM'] = load_learner(Path('./models/10LSTMRegression.pkl'), cpu=False)
-DLModels['11LSTM'] = load_learner(Path('./models/11LSTMRegression.pkl'), cpu=False)
-DLModels['12LSTM'] = load_learner(Path('./models/12LSTMRegression.pkl'), cpu=False)
-DLModels['13LSTM'] = load_learner(Path('./models/13LSTMRegression.pkl'), cpu=False)
-DLModels['14LSTM'] = load_learner(Path('./models/14LSTMRegression.pkl'), cpu=False)
-DLModels['15XCMPlus'] = load_learner(Path('./models/15XCMPlusRegression.pkl'), cpu=False)
+DLModels['10LSTM'] = load_learner(Path(PATH + 'models/10LSTMRegression.pkl'), cpu=False)
+DLModels['11LSTM'] = load_learner(Path(PATH + 'models/11LSTMRegression.pkl'), cpu=False)
+DLModels['12LSTM'] = load_learner(Path(PATH + 'models/12LSTMRegression.pkl'), cpu=False)
+DLModels['13LSTM'] = load_learner(Path(PATH + 'models/13LSTMRegression.pkl'), cpu=False)
+DLModels['14LSTM'] = load_learner(Path(PATH + 'models/14LSTMRegression.pkl'), cpu=False)
+DLModels['15XCMPlus'] = load_learner(Path(PATH + 'models/15XCMPlusRegression.pkl'), cpu=False)
 # 初始化最优权重值
 DLWeight = np.array([0.45, 0.26, 0, 0, 0.14, 0.15])
+
+# %% 训练
+valid_labels = torch.tensor(valid_labels)
+window_size = 7  # 滑动窗口大小为7
+half_window_size = window_size // 2
+window_weight = torch.tensor([0.4, 0.15, 0.1, 0.05, 0.05, 0.1, 0.15])
+MLDL_weight = torch.tensor([0.0692, 0.9308])
+
+idx = 0
+window_slide = torch.zeros(window_weight.shape)
+re = torch.zeros(valid_labels.shape)
+re_idx = 0
+
+isWindowsEmpty = true
+
+t = 10
 
 for index, row in valid_features.iterrows():
     sEMG = np.array(row).reshape(1, -1)
@@ -92,112 +104,58 @@ for index, row in valid_features.iterrows():
         sEMG = sEMG.reshape(1, 1, 8)
         _, _, preds = DLModels[j].get_X_preds(sEMG)
         DLResults += DLWeight[i] * np.array(preds)
-    print(MLResults, DLResults)
-    break
+
+    sEMG = MLDL_weight[0] * MLResults + MLDL_weight[1] * DLResults
+
+    # 先把数据填满
+    if isWindowsEmpty:
+        window_slide[idx] = sEMG
+        # 保存结果
+        if idx < half_window_size:
+            re[re_idx] = sEMG.item()
+            re_idx += 1
+
+            if re_idx == re.shape[0]:
+                break
+
+        idx += 1
+
+        if idx == window_size:
+            idx = half_window_size
+            isWindowsEmpty = False
+        else:
+            continue
+
+    # 投票算法
+    window_slide[(idx + half_window_size) % window_size] = sEMG
+
+    window_slide[idx] *= window_weight[0]
+
+    for i in range(1, window_size, 1):
+        window_slide[idx] += window_slide[(idx + i) % window_size] * window_weight[i]
+
+    re[re_idx] = window_slide[idx].item()
+    re_idx += 1
+
+    # print(re_idx)
+    if re_idx == valid_features.shape[0] - half_window_size:
+        while re_idx < valid_features.shape[0]:
+            idx = (idx + 1) % 7
+            re[re_idx] = window_slide[idx].item()
+            re_idx += 1
+
+    if idx < window_size - 1:
+        idx += 1
+    else:
+        idx = 0
 
 
+# %%
+def R2Score(YTrue, YPre):
+    u = ((YTrue - YPre) ** 2).sum()
+    v = ((YTrue - YTrue.mean()) ** 2).sum()
+    return 1 - u / v
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import multiprocessing
-# import numpy as np
-# import time
-# import datetime
-# import socket
-# import joblib
-# import warnings
-#
-# warnings.filterwarnings(action="ignore")
-#
-# from pyomyo import Myo, emg_mode
-#
-# # 加载集成学习模型
-# models = joblib.load('models/sEMGML.pkl')
-# # 初始化最优权重值
-# best_weight = np.array([0.42, 0.04, 0.14, 0.11, 0.09, 0.2])
-#
-# q = multiprocessing.Queue()
-#
-#
-# def worker(q, MODE):
-#     m = Myo(mode=MODE)
-#     m.connect()
-#
-#     def add_to_queue(emg, movement):
-#         q.put(emg)
-#
-#     m.add_emg_handler(add_to_queue)
-#
-#     # 训练时设置为橘色
-#     m.set_leds([128, 128, 0], [128, 128, 0])
-#     # 当手环连接成功时颤动一下
-#     m.vibrate(1)
-#
-#     while True:
-#         m.run()
-#
-#
-# if __name__ == "__main__":
-#
-#     MODE = emg_mode.PREPROCESSED
-#     p = multiprocessing.Process(target=worker, args=(q, MODE))
-#     p.start()
-#
-#     # 构建Socket实例,设置端口号和监听队列大小
-#     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     listener.bind(('127.0.0.1', 10086))
-#     listener.listen(5)
-#
-#     # 进入死循环,等待新的客户端连入
-#     while True:
-#         client_executor, addr = listener.accept()
-#         print('监听连接: %s:%s...' % addr)
-#
-#         # 连接成功后, 先清空之前的缓存
-#         while not q.empty():
-#             q.get()
-#
-#         # 八个通道的sEMG值, 角的运动值, 时间
-#         # data = ['One', 'Two', 'Three', "Four", "Five", "Six", "Seven", "Eight", "Rect", "Time"]
-#
-#         while True:
-#
-#             # sEMG = q.get()   # 8个通道的sEMG信号
-#             # # 做一些处理
-#             # sEMG = np.array([84, 268, 736, 161, 57, 285, 76, 209]).reshape(1, -1)
-#             # # [0.43085063, 0.30477173, 0.22223776, 0.22317647, 0.28845479, 0.37974083]
-#
-#             sEMG = np.array(q.get()).reshape(1, -1)
-#
-#             # 集成学习: SVR, LGB, RF, GBRT, XGB, Bagging
-#             re = 0
-#             for i, j in enumerate(models):
-#                 re += best_weight[i] * models[j].predict(sEMG)
-#
-#             # 发送过去
-#             client_executor.send(bytes(repr(round(re[0], 2)).encode('utf-8')))
-#             msg = client_executor.recv(1024).decode('utf-8')
-#
-#             # unity退出发出信号‘2’
-#             if msg == '2':
-#                 break
-#
-#         client_executor.close()
-#         print('断开连接: %s:%s' % addr)
-#
-#         p.terminate()
-#         p.join()
+# %%
+R2Score(valid_labels ,re)
