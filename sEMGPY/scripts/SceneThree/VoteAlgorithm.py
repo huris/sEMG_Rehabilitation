@@ -12,10 +12,8 @@ from tsai.all import *
 import joblib
 
 import os, sys
-
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import warnings
-
 warnings.filterwarnings(action="ignore")
 
 # %% 导入数据
@@ -74,88 +72,136 @@ DLModels['15XCMPlus'] = load_learner(Path(PATH + 'models/15XCMPlusRegression.pkl
 # 初始化最优权重值
 DLWeight = np.array([0.45, 0.26, 0, 0, 0.14, 0.15])
 
-# %% 训练
-valid_labels = torch.tensor(valid_labels)
-window_size = 7  # 滑动窗口大小为7
-half_window_size = window_size // 2
-window_weight = torch.tensor([0.4, 0.15, 0.1, 0.05, 0.05, 0.1, 0.15])
-MLDL_weight = torch.tensor([0.0692, 0.9308])
-
-idx = 0
-window_slide = torch.zeros(window_weight.shape)
-re = torch.zeros(valid_labels.shape)
-re_idx = 0
-
-isWindowsEmpty = true
-
-t = 10
-
-for index, row in valid_features.iterrows():
-    sEMG = np.array(row).reshape(1, -1)
-
-    # ML
-    MLResults = 0
-    for i, j in enumerate(MLModels):
-        MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
-
-    # DL
-    DLResults = 0
-    for i, j in enumerate(DLModels):
-        sEMG = sEMG.reshape(1, 1, 8)
-        _, _, preds = DLModels[j].get_X_preds(sEMG)
-        DLResults += DLWeight[i] * np.array(preds)
-
-    sEMG = MLDL_weight[0] * MLResults + MLDL_weight[1] * DLResults
-
-    # 先把数据填满
-    if isWindowsEmpty:
-        window_slide[idx] = sEMG
-        # 保存结果
-        if idx < half_window_size:
-            re[re_idx] = sEMG.item()
-            re_idx += 1
-
-            if re_idx == re.shape[0]:
-                break
-
-        idx += 1
-
-        if idx == window_size:
-            idx = half_window_size
-            isWindowsEmpty = False
-        else:
-            continue
-
-    # 投票算法
-    window_slide[(idx + half_window_size) % window_size] = sEMG
-
-    window_slide[idx] *= window_weight[0]
-
-    for i in range(1, window_size, 1):
-        window_slide[idx] += window_slide[(idx + i) % window_size] * window_weight[i]
-
-    re[re_idx] = window_slide[idx].item()
-    re_idx += 1
-
-    # print(re_idx)
-    if re_idx == valid_features.shape[0] - half_window_size:
-        while re_idx < valid_features.shape[0]:
-            idx = (idx + 1) % 7
-            re[re_idx] = window_slide[idx].item()
-            re_idx += 1
-
-    if idx < window_size - 1:
-        idx += 1
-    else:
-        idx = 0
-
-
 # %%
 def R2Score(YTrue, YPre):
     u = ((YTrue - YPre) ** 2).sum()
     v = ((YTrue - YTrue.mean()) ** 2).sum()
     return 1 - u / v
 
+# %% 训练
+results = torch.zeros((100, 1))
+for ii in range(3, 100, 2):
+    valid_labels = torch.tensor(valid_labels)
+    window_size = ii  # 滑动窗口大小为7
+    half_window_size = window_size // 2
+    window_weight = torch.tensor([1 / ii for i in range(0, ii)])
+
+    MLDL_weight = torch.tensor([0.0692, 0.9308])
+
+    idx = 0
+    window_slide = torch.zeros(window_weight.shape)
+    re = torch.zeros(valid_labels.shape)
+    re_idx = 0
+
+    isWindowsEmpty = True
+
+    t = 10
+
+    for index, row in valid_features.iterrows():
+        sEMG = np.array(row).reshape(1, -1)
+
+        # ML
+        MLResults = 0
+        for i, j in enumerate(MLModels):
+            MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
+
+        # DL
+        DLResults = 0
+        for i, j in enumerate(DLModels):
+            sEMG = sEMG.reshape(1, 1, 8)
+            _, _, preds = DLModels[j].get_X_preds(sEMG)
+            DLResults += DLWeight[i] * np.array(preds)
+
+        sEMG = MLDL_weight[0] * MLResults + MLDL_weight[1] * DLResults
+
+        # 先把数据填满
+        if isWindowsEmpty:
+            window_slide[idx] = sEMG
+            # 保存结果
+            if idx < half_window_size:
+                re[re_idx] = sEMG.item()
+                re_idx += 1
+
+                if re_idx == re.shape[0]:
+                    break
+
+            idx += 1
+
+            if idx == window_size:
+                idx = half_window_size
+                isWindowsEmpty = False
+            else:
+                continue
+
+        # 投票算法
+        window_slide[(idx + half_window_size) % window_size] = sEMG
+
+        window_slide[idx] *= window_weight[0]
+
+        for i in range(1, window_size, 1):
+            window_slide[idx] += window_slide[(idx + i) % window_size] * window_weight[i]
+
+        re[re_idx] = window_slide[idx].item()
+        re_idx += 1
+
+        # print(re_idx)
+        if re_idx == valid_features.shape[0] - half_window_size:
+            while re_idx < valid_features.shape[0]:
+                idx = (idx + 1) % 7
+                re[re_idx] = window_slide[idx].item()
+                re_idx += 1
+
+        if idx < window_size - 1:
+            idx += 1
+        else:
+            idx = 0
+
+    results[ii] = R2Score(valid_labels, re)
+    print(ii, results[ii])
+
 
 # %%
-R2Score(valid_labels ,re)
+R2Score(valid_labels, re)
+
+3 tensor([0.8657])
+5 tensor([0.8770])
+7 tensor([0.8853])
+9 tensor([0.8915])
+11 tensor([0.8963])
+13 tensor([0.8999])
+15 tensor([0.9026])
+17 tensor([0.9042])
+19 tensor([0.9060])
+21 tensor([0.9067])
+23 tensor([0.9073])
+25 tensor([0.9062])
+27 tensor([0.9064])
+29 tensor([0.9054])
+31 tensor([0.9030])
+33 tensor([0.9021])
+35 tensor([0.8993])
+37 tensor([0.8978])
+39 tensor([0.8956])
+41 tensor([0.8924])
+43 tensor([0.8893])
+45 tensor([0.8845])
+47 tensor([0.8817])
+49 tensor([0.8772])
+51 tensor([0.8728])
+53 tensor([0.8674])
+55 tensor([0.8610])
+57 tensor([0.8574])
+59 tensor([0.8500])
+61 tensor([0.8456])
+63 tensor([0.8389])
+65 tensor([0.8321])
+67 tensor([0.8233])
+69 tensor([0.8160])
+71 tensor([0.8082])
+73 tensor([0.8015])
+75 tensor([0.7937])
+77 tensor([0.7853])
+79 tensor([0.7764])
+81 tensor([0.7664])
+83 tensor([0.7540])
+85 tensor([0.7378])
