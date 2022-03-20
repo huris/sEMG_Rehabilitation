@@ -16,12 +16,14 @@ public class ManOne : MonoBehaviour
 {
     Man rightman;
     Man leftman;
-    private float speed;
-    private GameObject Canvas;
 
-    // 调整脚的转动速度
-    public static int FrameMax = 99;
-    public static int FrameMin = 0;
+    // 左右按钮
+    public Transform LMove;
+    public bool isLMove;
+
+    public Transform RMove;
+    public bool isRMove;
+
 
     // 通信
     private string message;
@@ -53,10 +55,12 @@ public class ManOne : MonoBehaviour
     {
         rightman = transform.Find("manright").GetComponent<Man>();
         leftman = transform.Find("manleft").GetComponent<Man>();
-        speed = 1;
 
-        Canvas = GameObject.Find("Canvas");
+        LMove = transform.Find("Canvas/LMove");
+        isLMove = true;
 
+        RMove = transform.Find("Canvas/RMove");
+        isRMove = true;
     }
 
     // Update is called once per frame
@@ -67,8 +71,50 @@ public class ManOne : MonoBehaviour
 
     void FixedUpdate()
     {
-        GetMessage();
+        //GetMessage();
     }
+
+    public void isLMoveButtonChange()
+    {
+        if (isLMove)
+        {
+            LMove.GetComponent<Image>().color = new Color32(38, 255, 68, 195);
+            LMove.GetChild(0).GetComponent<Text>().text = "Left Move";
+
+            isLMove = false;
+            leftman.gameObject.SetActive(false);
+        }
+        else
+        {
+            LMove.GetComponent<Image>().color = new Color32(248, 46, 32, 204);
+            LMove.GetChild(0).GetComponent<Text>().text = "Left Stop";
+
+            isLMove = true;
+            leftman.gameObject.SetActive(true);
+        }
+    }
+
+    public void isRMoveButtonChange()
+    {
+        if (isRMove)
+        {
+            RMove.GetComponent<Image>().color = new Color32(38, 255, 68, 195);
+            RMove.GetChild(0).GetComponent<Text>().text = "Right Move";
+
+            isRMove = false;
+            rightman.gameObject.SetActive(false);
+        }
+        else
+        {
+            RMove.GetComponent<Image>().color = new Color32(248, 46, 32, 204);
+            RMove.GetChild(0).GetComponent<Text>().text = "Right Stop";
+
+            isRMove = true;
+            rightman.gameObject.SetActive(true);
+        }
+    }
+
+
 
     void OnDestroy()
     {
@@ -95,7 +141,6 @@ public class ManOne : MonoBehaviour
         //print(message);
 
         float value = float.Parse(message);
-        if (value > 1f) value = 1f;
 
         ChangeRightLeg(value);
         ChangeLeftLeg(value);

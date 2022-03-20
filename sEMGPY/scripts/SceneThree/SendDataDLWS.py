@@ -80,6 +80,11 @@ if __name__ == "__main__":
             for i, j in enumerate(MLModels):
                 MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
 
+            if MLResults > 1:
+                MLResults = 1
+            elif MLResults < 0:
+                MLResults = 0
+
             # 先把数据填满
             if isWindowsEmpty:
                 window_slide[idx] = MLResults

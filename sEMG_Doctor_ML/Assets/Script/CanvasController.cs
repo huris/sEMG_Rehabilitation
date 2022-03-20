@@ -30,7 +30,7 @@ public class CanvasController : MonoBehaviour
     void Start()
     {
         Canvas = GameObject.Find("Canvas");
-        background = Canvas.transform.Find("background").GetComponent<Image>();
+        //background = Canvas.transform.Find("background").GetComponent<Image>();
         //leftslider= Canvas.transform.Find("leftlegChange").GetComponent<Slider>();
         //rightslider = Canvas.transform.Find("rightlegChange").GetComponent<Slider>();
         scene = GetComponent<SceneManager>();
