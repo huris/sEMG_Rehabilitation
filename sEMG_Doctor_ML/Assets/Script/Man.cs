@@ -70,7 +70,7 @@ public class Man : MonoBehaviour
 
     public void SpeedSliderChange()
     {
-        FrameMax = (int)(200 - transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().value * 100);
+        FrameMax = (int)(300 - transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().value * 200);
         PLUS = -1;
         Now = 0;
     }
