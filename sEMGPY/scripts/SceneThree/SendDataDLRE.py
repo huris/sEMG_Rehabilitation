@@ -31,9 +31,9 @@ DLModels['15XCMPlus'] = load_learner('models/15XCMPlusRegression.pkl', cpu=False
 DLWeight = np.array([0.45, 0.26, 0.14, 0.15])
 
 # %% 训练
-window_size = 7  # 滑动窗口大小为7
+window_size = 23  # 滑动窗口大小为7
 half_window_size = window_size // 2
-window_weight = torch.tensor([0.4, 0.15, 0.1, 0.05, 0.05, 0.1, 0.15])
+window_weight = torch.tensor([1 / window_size for i in range(0, window_size)])
 MLDL_weight = torch.tensor([0.0692, 0.9308])
 
 idx = 0
