@@ -92,7 +92,7 @@ public class ManOne : MonoBehaviour
 
         message = Encoding.UTF8.GetString(messTmp);
 
-        print(message);
+        //print(message);
 
         float value = float.Parse(message);
         if (value > 1f) value = 1f;

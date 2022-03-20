@@ -92,6 +92,7 @@ if __name__ == "__main__":
             # sEMG = np.array([84, 268, 736, 161, 57, 285, 76, 209]).reshape(1, -1)
 
             sEMG = np.array(q.get()).reshape(1, -1)
+            sEMG = sEMG.astype(np.float32)
 
             # ML
             MLResults = 0
