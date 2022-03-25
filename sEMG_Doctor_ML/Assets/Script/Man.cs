@@ -18,6 +18,7 @@ public class Man : MonoBehaviour
     public int PLUS = -1;
     public int Now = 0;
     public float Value = 0.0f;
+    public BoxCollider footbox;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,8 @@ public class Man : MonoBehaviour
 
         slider = transform.Find("Canvas/Slider").GetComponent<Slider>();
         sliderImage = transform.Find("Canvas/SliderImage").GetComponent<Image>();
+
+        footbox = transform.Find("footbox").GetComponent<BoxCollider>();
 
         ManInit();
     }
@@ -66,6 +69,9 @@ public class Man : MonoBehaviour
         Value = 1.0f * Now / (FrameMax - FrameMin + 1);
         slider.value = Value;
         sliderImage.fillAmount = Value / 2;
+
+        // 测试用, 之后删
+        ChangeLeg(Value);
     }
 
     public void SpeedSliderChange()
@@ -79,6 +85,10 @@ public class Man : MonoBehaviour
     public void ChangeLeg(float percent)
     {
         anim.Play(anim.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, percent);
+
+        // 0 0 0;  0 0 -11.5;  1 1 1;  0.15 0.18 0.94;  0.2 0.2 0.3
+        footbox.size = new Vector3(0.15f, 0.23f, -0.38f * percent * percent + 0.65f * percent + 0.08f);
+
         //sliderImage.fillAmount = percent / 2;
     }
 
