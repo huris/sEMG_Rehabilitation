@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Man : MonoBehaviour
+public class RMan : MonoBehaviour
 {
     Animator anim;
     private float speed;
@@ -11,6 +11,7 @@ public class Man : MonoBehaviour
     public bool isChanging = false, isMovingStart = false;   
 
     public Slider slider;
+    public Slider speedSlider;
     public Image sliderImage;
 
     public int FrameMax = 99;
@@ -33,10 +34,15 @@ public class Man : MonoBehaviour
         slider = transform.Find("Canvas/Slider").GetComponent<Slider>();
         sliderImage = transform.Find("Canvas/SliderImage").GetComponent<Image>();
 
-        footbox = transform.Find("footbox").GetComponent<BoxCollider>();
+        transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().onValueChanged.AddListener(delegate {
+            SpeedSliderChange();
+        });
 
+        footbox = transform.Find("footbox").GetComponent<BoxCollider>();
+       
         ManInit();
     }
+
 
     public void ManInit()
     {
@@ -71,8 +77,8 @@ public class Man : MonoBehaviour
         sliderImage.fillAmount = Value / 2;
 
         // 测试用, 之后删
-        DataManager.instance.sEMGData.Add(Value);
-        ChangeLeg(Value);
+        //DataManager.instance.RsEMGData.Add(Value);
+        //ChangeLeg(Value);
     }
 
     public void SpeedSliderChange()
@@ -80,6 +86,8 @@ public class Man : MonoBehaviour
         FrameMax = (int)(300 - transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().value * 200);
         PLUS = -1;
         Now = 0;
+
+        DataManager.instance.RsEMGData.Clear();
     }
 
 

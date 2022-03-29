@@ -295,16 +295,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 148312971}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 040237932e08df043bce599bb2f28d93, type: 3}
+  m_Script: {fileID: 11500000, guid: b942fee7713486e4f8a379a733dd14e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isChanging: 0
   isMovingStart: 0
   slider: {fileID: 0}
+  speedSlider: {fileID: 0}
   sliderImage: {fileID: 0}
   FrameMax: 99
   FrameMin: 0
-  PLUS: 1
+  PLUS: -1
   Now: 0
   Value: 0
   footbox: {fileID: 0}
@@ -359,7 +360,7 @@ Transform:
   - {fileID: 148312972}
   - {fileID: 1558822393}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 2.1990001, z: 0}
 --- !u!114 &185854855
 MonoBehaviour:
@@ -711,7 +712,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &311149839
 GameObject:
@@ -936,7 +937,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: ab4a38858a726294c86b5aa5f0c8b099,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ab4a38858a726294c86b5aa5f0c8b099,
         type: 3}
@@ -1112,16 +1113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040237932e08df043bce599bb2f28d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isChanging: 0
-  isMovingStart: 0
-  slider: {fileID: 0}
-  sliderImage: {fileID: 0}
-  FrameMax: 99
-  FrameMin: 0
-  PLUS: 1
-  Now: 0
-  Value: 0
-  footbox: {fileID: 0}
 --- !u!1 &536431215
 GameObject:
   m_ObjectHideFlags: 0
@@ -1151,7 +1142,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &536431217
 MonoBehaviour:
@@ -1192,13 +1183,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694006764}
-  m_LocalRotation: {x: 0, y: 0, z: -0.078459024, w: 0.99691737}
+  m_LocalRotation: {x: 0, y: 0, z: -0.06975647, w: 0.9975641}
   m_LocalPosition: {x: 1.05, y: -1.13, z: 0.65}
   m_LocalScale: {x: 2.63, y: 0.2, z: 1.5}
   m_Children: []
   m_Father: {fileID: 1589156302}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -9}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -8}
 --- !u!65 &694006766
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1359,16 +1350,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040237932e08df043bce599bb2f28d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isChanging: 0
-  isMovingStart: 0
-  slider: {fileID: 0}
-  sliderImage: {fileID: 0}
-  FrameMax: 99
-  FrameMin: 0
-  PLUS: 1
-  Now: 0
-  Value: 0
-  footbox: {fileID: 0}
 --- !u!95 &772887083
 Animator:
   serializedVersion: 3
@@ -1664,19 +1645,7 @@ MonoBehaviour:
   m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 148312973}
-        m_TargetAssemblyTypeName: Man, Assembly-CSharp
-        m_MethodName: SpeedSliderChange
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1001 &873281246
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1793,15 +1762,15 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873281248}
   serializedVersion: 2
-  m_Mass: 10
-  m_Drag: 8
+  m_Mass: 5
+  m_Drag: 6
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &873281253
+--- !u!114 &873281251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1810,14 +1779,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 873281248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 360a13d3919165945a733882fda58698, type: 3}
+  m_Script: {fileID: 11500000, guid: 990517a123a1d68468225ed245d976b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
   force: 0
   wallforce: 0
   footforce: 0
-  dec: 0
   willLaunch: 0
 --- !u!1 &944177764
 GameObject:
@@ -2133,7 +2100,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1181153461
 MonoBehaviour:
@@ -2147,7 +2114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd0edc4f74aa89346939d9f180a1d73d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sEMGData: []
+  LsEMGData: []
+  RsEMGData: []
 --- !u!1001 &1192563541
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2243,6 +2211,22 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1192563541}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1192563543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192563542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 332904b3a83fc594f930130961905e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force: 0
+  wallforce: 0
+  footforce: 0
+  willLaunch: 0
 --- !u!135 &1192563544
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2264,8 +2248,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1192563542}
   serializedVersion: 2
-  m_Mass: 10
-  m_Drag: 8
+  m_Mass: 5
+  m_Drag: 6
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -2556,7 +2540,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 114.3, y: 203.3, z: 148}
 --- !u!1 &1375178800
 GameObject:
@@ -2670,16 +2654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040237932e08df043bce599bb2f28d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isChanging: 0
-  isMovingStart: 0
-  slider: {fileID: 0}
-  sliderImage: {fileID: 0}
-  FrameMax: 99
-  FrameMin: 0
-  PLUS: 1
-  Now: 0
-  Value: 0
-  footbox: {fileID: 0}
 --- !u!1 &1402474494 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: ce2bc2c186ccb7b45a3c40b01784fe19,
@@ -3157,19 +3131,7 @@ MonoBehaviour:
   m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1920211768}
-        m_TargetAssemblyTypeName: Man, Assembly-CSharp
-        m_MethodName: SpeedSliderChange
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &1570318244
 GameObject:
   m_ObjectHideFlags: 0
@@ -3216,7 +3178,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: ce2bc2c186ccb7b45a3c40b01784fe19,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ce2bc2c186ccb7b45a3c40b01784fe19,
         type: 3}
@@ -3387,7 +3349,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 35.86, y: 0, z: 0}
 --- !u!1 &1699618630
 GameObject:
@@ -3658,7 +3620,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: ec9b2ade30e8eee4cbe730d2994b3a64,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ec9b2ade30e8eee4cbe730d2994b3a64,
         type: 3}
@@ -3940,7 +3902,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 48e687d2168d6254e917f24fbc5578ad,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 48e687d2168d6254e917f24fbc5578ad,
         type: 3}
@@ -4025,7 +3987,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1920211766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 040237932e08df043bce599bb2f28d93, type: 3}
+  m_Script: {fileID: 11500000, guid: 63214ad861fc39341956526cf23cf9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isChanging: 0
@@ -4034,7 +3996,7 @@ MonoBehaviour:
   sliderImage: {fileID: 0}
   FrameMax: 99
   FrameMin: 0
-  PLUS: 1
+  PLUS: -1
   Now: 0
   Value: 0
   footbox: {fileID: 0}
@@ -4342,7 +4304,7 @@ RectTransform:
   m_Children:
   - {fileID: 1879985687}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4362,8 +4324,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Canvas: {fileID: 0}
-  rightman: {fileID: 148312973}
-  leftman: {fileID: 1920211768}
+  rightman: {fileID: 0}
+  leftman: {fileID: 0}
 --- !u!114 &2044247641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4689,5 +4651,5 @@ Transform:
   m_Children:
   - {fileID: 6231356674895511646}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}

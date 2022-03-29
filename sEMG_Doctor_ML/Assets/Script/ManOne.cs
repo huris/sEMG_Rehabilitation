@@ -14,8 +14,8 @@ using System.Threading;
 
 public class ManOne : MonoBehaviour
 {
-    Man rightman;
-    Man leftman;
+    RMan rightman;
+    LMan leftman;
 
     // 左右按钮
     public Transform LMove;
@@ -49,21 +49,13 @@ public class ManOne : MonoBehaviour
             return;
         }
 
-        if (DataManager.instance.sEMGData == null)
-        {
-            DataManager.instance.sEMGData = new List<float>();
-        }
-        else
-        {
-            DataManager.instance.sEMGData.Clear();
-        }
     }
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        rightman = transform.Find("manright").GetComponent<Man>();
-        leftman = transform.Find("manleft").GetComponent<Man>();
+        rightman = transform.Find("manright").GetComponent<RMan>();
+        leftman = transform.Find("manleft").GetComponent<LMan>();
 
         LMove = transform.Find("Canvas/LMove");
         isLMove = true;
@@ -80,7 +72,7 @@ public class ManOne : MonoBehaviour
 
     void FixedUpdate()
     {
-        //GetMessage();
+        GetMessage();
     }
 
     public void isLMoveButtonChange()
@@ -151,8 +143,9 @@ public class ManOne : MonoBehaviour
 
         float value = float.Parse(message);
 
-        DataManager.instance.sEMGData.Add(value);
-            
+        DataManager.instance.LsEMGData.Add(value);
+        DataManager.instance.RsEMGData.Add(value);
+
         ChangeRightLeg(value);
         ChangeLeftLeg(value);
 

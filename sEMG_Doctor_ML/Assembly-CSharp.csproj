@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,9 +53,13 @@
     <UnityVersion>2021.1.18f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\Myo\Scripts\ThalmicHub.cs" />
     <Compile Include="Assets\Script\SceneManager.cs" />
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\Script\RMan.cs" />
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Myo.cs" />
     <Compile Include="Assets\Myo\Scripts\ThalmicMyo.cs" />
     <Compile Include="Assets\Myo Samples\Scripts\SampleSceneGUI.cs" />
@@ -63,6 +67,8 @@
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Pose.cs" />
     <Compile Include="Assets\Script\Py2Unity.cs" />
     <Compile Include="Assets\Demigiant\DOTweenPro\DOTweenAnimation.cs" />
+    <Compile Include="Assets\Script\LcollsionMonitor.cs" />
+    <Compile Include="Assets\Script\LMan.cs" />
     <Compile Include="Assets\Myo Samples\Scripts\JointOrientation.cs" />
     <Compile Include="Assets\Script\DataManager.cs" />
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Vector3.cs" />
@@ -70,13 +76,10 @@
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Quaternion.cs" />
     <Compile Include="Assets\Script\CanvasController.cs" />
     <Compile Include="Assets\Script\ManController.cs" />
+    <Compile Include="Assets\Script\RcollsionMonitor.cs" />
     <Compile Include="Assets\Script\ManOne.cs" />
     <Compile Include="Assets\Myo\Scripts\Myo.NET\libmyo.cs" />
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Hub.cs" />
-    <Compile Include="Assets\Script\LcollsionMonitor.cs" />
-    <Compile Include="Assets\Script\RMan.cs" />
-    <Compile Include="Assets\Script\LMan.cs" />
-    <Compile Include="Assets\Script\RcollsionMonitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Demigiant\DOTween\DOTween43.xml" />

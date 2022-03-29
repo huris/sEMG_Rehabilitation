@@ -7,8 +7,8 @@ public class DataManager : MonoBehaviour
 
     public static DataManager instance = null;
 
-    public List<float> LsEMGData;
-    public List<float> RsEMGData;
+    public List<float> LsEMGData = new List<float>();
+    public List<float> RsEMGData = new List<float>();
 
 
     void Awake()

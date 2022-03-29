@@ -17,8 +17,8 @@ public class CanvasController : MonoBehaviour
     //private Slider rightslider;
     private SceneManager scene;
 
-    public Man rightman;
-    public Man leftman;
+    public RMan rightman;
+    public LMan leftman;
 
     // Myo game object to connect with.
     // This object must have a ThalmicMyo script attached.
