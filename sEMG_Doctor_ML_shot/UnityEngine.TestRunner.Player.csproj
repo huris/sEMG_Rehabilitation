@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{A7EDEA59-A95C-0235-0A8E-B388447A8ED4}</ProjectGuid>
+    <ProjectGuid>{9A67AAC1-CC1A-F6C1-1C85-73A0ACC04705}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>UnityEngine.TestRunner</AssemblyName>
