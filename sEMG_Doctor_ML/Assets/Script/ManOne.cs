@@ -48,6 +48,15 @@ public class ManOne : MonoBehaviour
             Console.WriteLine(e.Message);
             return;
         }
+
+        if (DataManager.instance.sEMGData == null)
+        {
+            DataManager.instance.sEMGData = new List<float>();
+        }
+        else
+        {
+            DataManager.instance.sEMGData.Clear();
+        }
     }
 
     // Start is called before the first frame update
@@ -142,6 +151,8 @@ public class ManOne : MonoBehaviour
 
         float value = float.Parse(message);
 
+        DataManager.instance.sEMGData.Add(value);
+            
         ChangeRightLeg(value);
         ChangeLeftLeg(value);
 
