@@ -75,6 +75,7 @@
     <Compile Include="Assets\Myo Samples\Scripts\ColorBoxByPose.cs" />
     <Compile Include="Assets\Myo\Scripts\Myo.NET\Quaternion.cs" />
     <Compile Include="Assets\Script\CanvasController.cs" />
+    <Compile Include="Assets\Script\Rshot.cs" />
     <Compile Include="Assets\Script\ManController.cs" />
     <Compile Include="Assets\Script\RcollsionMonitor.cs" />
     <Compile Include="Assets\Script\ManOne.cs" />

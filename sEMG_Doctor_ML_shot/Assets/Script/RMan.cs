@@ -51,7 +51,7 @@ public class RMan : MonoBehaviour
         anim.SetFloat("test", speed);
         ChangeAll((slider.maxValue - slider.minValue) / 2);
 
-        FrameMax = 99;
+        FrameMax = 199;
         FrameMin = 0;
         PLUS = -1;
         Now = 0;
@@ -73,6 +73,7 @@ public class RMan : MonoBehaviour
         }
         Now += PLUS;
         Value = 1.0f * Now / (FrameMax - FrameMin + 1);
+
         slider.value = Value;
         sliderImage.fillAmount = Value / 2;
 
