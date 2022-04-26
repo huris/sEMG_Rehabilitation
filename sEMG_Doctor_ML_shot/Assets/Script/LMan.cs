@@ -71,7 +71,7 @@ public class LMan : MonoBehaviour
             PLUS = -PLUS;
         }
         Now += PLUS;
-        Value = 1.0f * Now / (FrameMax - FrameMin + 1);
+        Value = 1.0f * Now / (FrameMax - FrameMin + 1) / 3f;
 
         slider.value = Value;
         sliderImage.fillAmount = Value / 2;
