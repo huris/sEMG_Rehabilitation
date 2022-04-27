@@ -78,8 +78,8 @@ public class LMan : MonoBehaviour
 
         // 测试用, 之后删
 
-        DataManager.instance.LsEMGData.Add(Value);
-        ChangeLeg(Value);
+        //DataManager.instance.LsEMGData.Add(Value);
+        //ChangeLeg(Value);
         
     }
 

@@ -78,8 +78,8 @@ public class RMan : MonoBehaviour
         sliderImage.fillAmount = Value / 2;
 
         // 测试用, 之后删
-        DataManager.instance.RsEMGData.Add(Value);
-        ChangeLeg(Value);
+        //DataManager.instance.RsEMGData.Add(Value);
+        //ChangeLeg(Value);
     }
 
     public void SpeedSliderChange()

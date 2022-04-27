@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 # DL/ML Algoirthm
+import torch
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 from tsai.all import *
@@ -61,16 +62,27 @@ MLWeight = np.array([0.42, 0.04, 0.14, 0.11, 0.09, 0.2])
 # %% 深度学习模型
 from tsai.inference import load_learner
 
-# 加载深度学习回归模型
+# # 加载深度学习回归模型
+# DLModels = {}
+# DLModels['10LSTM'] = load_learner(Path(PATH + 'models/10LSTMRegression.pkl'), cpu=False)
+# DLModels['11LSTM'] = load_learner(Path(PATH + 'models/11LSTMRegression.pkl'), cpu=False)
+# DLModels['12LSTM'] = load_learner(Path(PATH + 'models/12LSTMRegression.pkl'), cpu=False)
+# DLModels['13LSTM'] = load_learner(Path(PATH + 'models/13LSTMRegression.pkl'), cpu=False)
+# DLModels['14LSTM'] = load_learner(Path(PATH + 'models/14LSTMRegression.pkl'), cpu=False)
+# DLModels['15XCMPlus'] = load_learner(Path(PATH + 'models/15XCMPlusRegression.pkl'), cpu=False)
+# # 初始化最优权重值
+# DLWeight = np.array([0.45, 0.26, 0, 0, 0.14, 0.15])
+# # 加载深度学习回归模型
 DLModels = {}
-DLModels['10LSTM'] = load_learner(Path(PATH + 'models/10LSTMRegression.pkl'), cpu=False)
-DLModels['11LSTM'] = load_learner(Path(PATH + 'models/11LSTMRegression.pkl'), cpu=False)
-DLModels['12LSTM'] = load_learner(Path(PATH + 'models/12LSTMRegression.pkl'), cpu=False)
-DLModels['13LSTM'] = load_learner(Path(PATH + 'models/13LSTMRegression.pkl'), cpu=False)
-DLModels['14LSTM'] = load_learner(Path(PATH + 'models/14LSTMRegression.pkl'), cpu=False)
-DLModels['15XCMPlus'] = load_learner(Path(PATH + 'models/15XCMPlusRegression.pkl'), cpu=False)
+DLModels['30LSTM'] = load_learner(Path(PATH + 'models/30LSTMRegression.pkl'), cpu=False)
+DLModels['31LSTM'] = load_learner(Path(PATH + 'models/31LSTMRegression.pkl'), cpu=False)
+DLModels['32LSTM'] = load_learner(Path(PATH + 'models/32LSTMRegression.pkl'), cpu=False)
+DLModels['33MLSTM_FCN'] = load_learner(Path(PATH + 'models/33MLSTM_FCNRegression.pkl'), cpu=False)
+DLModels['34MLSTM_FCNPlus'] = load_learner(Path(PATH + 'models/34MLSTM_FCNPlusRegression.pkl'), cpu=False)
+DLModels['35LSTM'] = load_learner(Path(PATH + 'models/35LSTMRegression.pkl'), cpu=False)
+
 # 初始化最优权重值
-DLWeight = np.array([0.45, 0.26, 0, 0, 0.14, 0.15])
+DLWeight = torch.tensor([0.15, 0.25, 0.28, 0.32, 0, 0], dtype=torch.float32)
 
 # %%
 def R2Score(YTrue, YPre):
@@ -79,40 +91,42 @@ def R2Score(YTrue, YPre):
     return 1 - u / v
 
 # %% 训练
-results = torch.zeros((100, 1))
-for ii in range(3, 100, 2):
-    valid_labels = torch.tensor(valid_labels)
-    window_size = ii  # 滑动窗口大小为7
-    half_window_size = window_size // 2
-    window_weight = torch.tensor([1 / ii for i in range(0, ii)])
+results = np.array((100, 1))
+test_labels = np.array(valid_labels, dtype=np.float16)
+test_features = valid_features
+MLDL_weight = np.array([0.2112, 0.7888])
 
-    MLDL_weight = torch.tensor([0.0692, 0.9308])
+for ii in range(21, 22, 2):
+    window_size = ii  # 滑动窗口大小
+    half_window_size = window_size // 2
+    window_weight = np.array([1 / ii for i in range(0, ii)])
 
     idx = 0
-    window_slide = torch.zeros(window_weight.shape)
-    re = torch.zeros(valid_labels.shape)
+    window_slide = np.zeros(window_weight.shape)
+    re = np.zeros(test_labels.shape)
     re_idx = 0
 
     isWindowsEmpty = True
 
-    t = 10
-
-    for index, row in valid_features.iterrows():
-        sEMG = np.array(row).reshape(1, -1)
+    for index, row in test_features.iterrows():
+        sEMG = np.array(row, dtype=np.float).reshape(1, -1)
 
         # ML
         MLResults = 0
         for i, j in enumerate(MLModels):
             MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
 
-        # DL
-        DLResults = 0
-        for i, j in enumerate(DLModels):
-            sEMG = sEMG.reshape(1, 1, 8)
-            _, _, preds = DLModels[j].get_X_preds(sEMG)
-            DLResults += DLWeight[i] * np.array(preds)
+        # # print(sEMG)
+        # # DL
+        # DLResults = 0
+        # for i, j in enumerate(DLModels):
+        #     sEMG = sEMG.reshape(1, 1, 8)
+        #     _, _, preds = DLModels[j].get_X_preds(sEMG)
+        #     DLResults += DLWeight[i] * np.array(preds)
 
-        sEMG = MLDL_weight[0] * MLResults + MLDL_weight[1] * DLResults
+        # sEMG = np.array(MLDL_weight[0] * MLResults) + np.array(MLDL_weight[1] * DLResults)
+        sEMG = torch.tensor(MLResults)
+        # sEMG = DLResults
 
         # 先把数据填满
         if isWindowsEmpty:
@@ -145,9 +159,9 @@ for ii in range(3, 100, 2):
         re_idx += 1
 
         # print(re_idx)
-        if re_idx == valid_features.shape[0] - half_window_size:
-            while re_idx < valid_features.shape[0]:
-                idx = (idx + 1) % 7
+        if re_idx == test_labels.shape[0] - half_window_size:
+            while re_idx < test_labels.shape[0]:
+                idx = (idx + 1) % window_size
                 re[re_idx] = window_slide[idx].item()
                 re_idx += 1
 
@@ -156,9 +170,16 @@ for ii in range(3, 100, 2):
         else:
             idx = 0
 
-    results[ii] = R2Score(valid_labels, re)
+    results[ii] = R2Score(test_labels, re)
     print(ii, results[ii])
 
 
 # %%
-R2Score(valid_labels, re)
+plt.figure()
+plt.plot(np.arange(len(test_labels)), test_labels,'go-',label='True Value')
+plt.plot(np.arange(len(test_labels)), re, 'ro-',label='Predict Value')
+# plt.title(f'{name} score: {score}')
+plt.xlabel = "Samples"
+plt.ylabel = "Angle of Rotation"
+plt.legend()
+plt.show()

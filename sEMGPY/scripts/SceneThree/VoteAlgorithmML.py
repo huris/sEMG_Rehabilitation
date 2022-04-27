@@ -117,7 +117,7 @@ for ii in range(3, 100, 2):
         # print(re_idx)
         if re_idx == valid_features.shape[0] - half_window_size:
             while re_idx < valid_features.shape[0]:
-                idx = (idx + 1) % 7
+                idx = (idx + 1) % window_size
                 re[re_idx] = window_slide[idx].item()
                 re_idx += 1
 
