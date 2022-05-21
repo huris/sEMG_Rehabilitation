@@ -20,8 +20,8 @@ public class LcollsionMonitor : MonoBehaviour
     void OnEnable()
     {
         rgd = GetComponent<Rigidbody>(); //获取球体上的刚体组件
-        wallforce = -10f;
-        footforce = 15f;
+        wallforce = -17f;
+        footforce = 17f;
         force = wallforce;
 
         wallgravity = -3f;
@@ -43,7 +43,7 @@ public class LcollsionMonitor : MonoBehaviour
         {
             int num = DataManager.instance.LsEMGData.Count;
             //if (num > 0 && DataManager.instance.LsEMGData.Last() > 0.4f)
-            if (num > 0 && DataManager.instance.LsEMGData.Last() < 0.2f)
+            if (num > 0 && DataManager.instance.LsEMGData.Last() < 0.4f)
             {
                 int n = Mathf.Min(7, num);
                 while(n > 1)

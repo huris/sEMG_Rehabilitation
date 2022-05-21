@@ -1,6 +1,8 @@
 import multiprocessing
 import numpy as np
 import socket
+import time
+import datetime
 import joblib
 import warnings
 warnings.filterwarnings(action="ignore")
@@ -64,8 +66,12 @@ if __name__ == "__main__":
         while not q.empty():
             q.get()
 
+        start_time = time.time()
+        start_time_ns = time.perf_counter_ns()
+
         # 八个通道的sEMG值, 角的运动值, 时间
         # data = ['One', 'Two', 'Three', "Four", "Five", "Six", "Seven", "Eight", "Rect", "Time"]
+        data = []
 
         while True:
 
@@ -73,7 +79,9 @@ if __name__ == "__main__":
             # # 做一些处理
             # sEMG = np.array([84, 268, 736, 161, 57, 285, 76, 209]).reshape(1, -1)
 
-            sEMG = np.array(q.get()).reshape(1, -1)
+            d = list(q.get())
+
+            sEMG = np.array(d).reshape(1, -1)
 
             # ML
             MLResults = 0
@@ -105,8 +113,13 @@ if __name__ == "__main__":
                 window_slide[idx] += window_slide[(idx + i) % window_size] * window_weight[i]
 
             # 发送过去
-            client_executor.send(bytes(repr(round(window_slide[idx].item(), 2)).encode('utf-8')))
+            value = round(window_slide[idx].item(), 2)
+            client_executor.send(bytes(repr(value).encode('utf-8')))
             msg = client_executor.recv(1024).decode('utf-8')
+
+            d.append(value)
+            d.append(time.perf_counter_ns() - start_time_ns)
+            data.append(d)
 
             # unity退出发出信号‘2’
             if msg == '2':
@@ -119,6 +132,11 @@ if __name__ == "__main__":
 
         client_executor.close()
         print('断开连接: %s:%s' % addr)
+
+        # 保存数据
+        np_data = np.asarray(data)
+        np.savetxt("./experiment/" + str(datetime.datetime.now().strftime("%Y%m%d_%H%M%S")) + ".csv", np_data, delimiter=",")
+        print("数据已保存")
 
         p.terminate()
         p.join()

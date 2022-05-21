@@ -80,7 +80,7 @@ public class LMan : MonoBehaviour
 
         //DataManager.instance.LsEMGData.Add(Value);
         //ChangeLeg(Value);
-        
+
     }
 
     public void SpeedSliderChange()

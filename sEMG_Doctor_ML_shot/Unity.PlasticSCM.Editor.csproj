@@ -82,8 +82,8 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\AssetOverlays\Cache\AssetStatusCache.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\Views\History\HistoryListView.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\AssetOverlays\Cache\LocalStatusCache.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\UI\MeasureMaxWidth.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\AssetMenu\AssetOperations.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\UI\MeasureMaxWidth.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\Views\History\HistoryListHeaderState.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\Views\IncomingChanges\Gluon\Errors\ErrorListViewItem.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.7.1\Editor\PlasticSCM\Configuration\ChannelCertificateUiImpl.cs" />

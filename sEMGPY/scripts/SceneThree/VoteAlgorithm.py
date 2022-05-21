@@ -92,11 +92,13 @@ def R2Score(YTrue, YPre):
 
 # %% 训练
 results = np.array((100, 1))
-test_labels = np.array(valid_labels, dtype=np.float16)
-test_features = valid_features
+test_labels = np.array(train_labels, dtype=np.float16)
+test_features = train_features
 MLDL_weight = np.array([0.2112, 0.7888])
 
-for ii in range(21, 22, 2):
+for ii in range(23, 24, 2):
+    start = time.perf_counter()
+
     window_size = ii  # 滑动窗口大小
     half_window_size = window_size // 2
     window_weight = np.array([1 / ii for i in range(0, ii)])
@@ -112,21 +114,21 @@ for ii in range(21, 22, 2):
         sEMG = np.array(row, dtype=np.float).reshape(1, -1)
 
         # ML
-        MLResults = 0
-        for i, j in enumerate(MLModels):
-            MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
+        # MLResults = 0
+        # for i, j in enumerate(MLModels):
+        #     MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
 
         # # print(sEMG)
         # # DL
-        # DLResults = 0
-        # for i, j in enumerate(DLModels):
-        #     sEMG = sEMG.reshape(1, 1, 8)
-        #     _, _, preds = DLModels[j].get_X_preds(sEMG)
-        #     DLResults += DLWeight[i] * np.array(preds)
+        DLResults = 0
+        for i, j in enumerate(DLModels):
+            sEMG = sEMG.reshape(1, 1, 8)
+            _, _, preds = DLModels[j].get_X_preds(sEMG)
+            DLResults += DLWeight[i] * np.array(preds)
 
         # sEMG = np.array(MLDL_weight[0] * MLResults) + np.array(MLDL_weight[1] * DLResults)
-        sEMG = torch.tensor(MLResults)
-        # sEMG = DLResults
+        # sEMG = torch.tensor(MLResults)
+        sEMG = DLResults
 
         # 先把数据填满
         if isWindowsEmpty:
@@ -170,8 +172,14 @@ for ii in range(21, 22, 2):
         else:
             idx = 0
 
-    results[ii] = R2Score(test_labels, re)
-    print(ii, results[ii])
+    # results[ii] = R2Score(test_labels, re)  # 循环i
+    results = R2Score(test_labels, re)  # 单个i
+
+    end = time.perf_counter()
+    print("time consuming : {:.4f}ms".format((end - start) * 1000))
+
+    # print(ii, results[ii]) # 循环i
+    print(ii, results)  # 单个i
 
 
 # %%

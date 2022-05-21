@@ -335,17 +335,20 @@
     <Reference Include="DemiLib">
       <HintPath>Assets\Demigiant\DemiLib\Core\DemiLib.dll</HintPath>
     </Reference>
+    <Reference Include="Valve.Newtonsoft.Json">
+      <HintPath>Assets\SteamVR\Input\Plugins\JSON.NET\Valve.Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Demigiant\DOTween\DOTween.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="DOTween46">
       <HintPath>Assets\Demigiant\DOTween\DOTween46.dll</HintPath>
     </Reference>
     <Reference Include="DOTween43">
       <HintPath>Assets\Demigiant\DOTween\DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="DOTweenPro">
       <HintPath>Assets\Demigiant\DOTweenPro\DOTweenPro.dll</HintPath>
@@ -706,9 +709,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="SteamVR_Input_Editor.csproj">
+      <Project>{60192A30-249A-52A4-4BD8-8CAA9CB6A5C2}</Project>
+      <Name>SteamVR_Input_Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.VSCode.Editor.csproj">
       <Project>{D56EB1DE-78DD-DEEE-92DA-9C3BAE861639}</Project>
       <Name>Unity.VSCode.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.XR.OpenVR.csproj">
+      <Project>{3AB02CD4-4D3E-0EEF-EEB8-AFC8DC084BDD}</Project>
+      <Name>Unity.XR.OpenVR</Name>
+    </ProjectReference>
+    <ProjectReference Include="SteamVR.csproj">
+      <Project>{F57D4265-D8DB-D048-FE3C-1BBF95832521}</Project>
+      <Name>SteamVR</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{DF38A4C4-256A-841E-46AC-52B28ED2A4D5}</Project>
@@ -722,13 +737,9 @@
       <Project>{AC722255-8066-94AB-51E7-BF1380356463}</Project>
       <Name>Unity.Sysroot.Linux_x86_64</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.Toolchain.Win-x86_64-Linux-x86_64.csproj">
-      <Project>{0C86F5FD-E43D-425C-CC54-82F42DFB5A23}</Project>
-      <Name>Unity.Toolchain.Win-x86_64-Linux-x86_64</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Timeline.Editor.csproj">
-      <Project>{5DEF1179-528E-F363-A090-5809DDC40C75}</Project>
-      <Name>Unity.Timeline.Editor</Name>
+    <ProjectReference Include="Unity.XR.Management.Editor.csproj">
+      <Project>{50BD7B5C-CFAD-49BA-AD03-D4CC5269DBF1}</Project>
+      <Name>Unity.XR.Management.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Timeline.csproj">
       <Project>{01BD08B9-6F3F-AB72-2914-20E2106D5B33}</Project>
@@ -737,6 +748,14 @@
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{AB32B039-630E-8823-7DB4-C70A38B333D1}</Project>
       <Name>Unity.TextMeshPro</Name>
+    </ProjectReference>
+    <ProjectReference Include="SteamVR_Windows_EditorHelper.csproj">
+      <Project>{9D8D578C-9E72-B53D-FA70-7632F98F7D59}</Project>
+      <Name>SteamVR_Windows_EditorHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Subsystem.Registration.csproj">
+      <Project>{48315221-AA26-2922-68A7-EFC668F4982F}</Project>
+      <Name>Unity.Subsystem.Registration</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{148B5C79-1800-91EE-3615-701EFB039503}</Project>
@@ -753,6 +772,42 @@
     <ProjectReference Include="UnityEngine.UI.csproj">
       <Project>{8188CA67-F645-D3C5-EBFC-C70BFB2BEEC7}</Project>
       <Name>UnityEngine.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.SpatialTracking.csproj">
+      <Project>{47D7CF3E-B558-5FC3-6275-BD027B567A9B}</Project>
+      <Name>UnityEngine.SpatialTracking</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.XR.OpenVR.Editor.csproj">
+      <Project>{F4C441CA-E601-B6D6-994A-97F371BA6D0E}</Project>
+      <Name>Unity.XR.OpenVR.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="SteamVR_Editor.csproj">
+      <Project>{9E5B2511-BB66-0A8F-55AA-2EB3406731EA}</Project>
+      <Name>SteamVR_Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.XR.LegacyInputHelpers.csproj">
+      <Project>{6F70A4E9-5259-A25C-3A88-1F4AE060B2CE}</Project>
+      <Name>UnityEngine.XR.LegacyInputHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Toolchain.Win-x86_64-Linux-x86_64.csproj">
+      <Project>{0C86F5FD-E43D-425C-CC54-82F42DFB5A23}</Project>
+      <Name>Unity.Toolchain.Win-x86_64-Linux-x86_64</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Timeline.Editor.csproj">
+      <Project>{5DEF1179-528E-F363-A090-5809DDC40C75}</Project>
+      <Name>Unity.Timeline.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEditor.XR.LegacyInputHelpers.csproj">
+      <Project>{7724F7EF-2778-C13D-0C51-3F7AC2CD736F}</Project>
+      <Name>UnityEditor.XR.LegacyInputHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.XR.Management.csproj">
+      <Project>{2F20DAC0-8634-3A3F-548F-6520E86B1674}</Project>
+      <Name>Unity.XR.Management</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEditor.SpatialTracking.csproj">
+      <Project>{9FCB2DD2-07D7-64C0-497D-4F0941F3A347}</Project>
+      <Name>UnityEditor.SpatialTracking</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.SysrootPackage.Editor.csproj">
       <Project>{1C108A5A-ABCC-F459-E499-D2EE8DC09FBA}</Project>

@@ -301,6 +301,9 @@
     <Reference Include="DemiLib">
       <HintPath>Assets\Demigiant\DemiLib\Core\DemiLib.dll</HintPath>
     </Reference>
+    <Reference Include="Valve.Newtonsoft.Json">
+      <HintPath>Assets\SteamVR\Input\Plugins\JSON.NET\Valve.Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Demigiant\DOTween\DOTween.dll</HintPath>
     </Reference>
@@ -663,6 +666,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.XR.OpenVR.csproj">
+      <Project>{ED01AA80-8BFE-D446-0E6D-4B5092658A40}</Project>
+      <Name>Unity.XR.OpenVR</Name>
+    </ProjectReference>
+    <ProjectReference Include="SteamVR.csproj">
+      <Project>{0D821873-50A9-768F-4104-D23C6E19F6EB}</Project>
+      <Name>SteamVR</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Timeline.csproj">
       <Project>{1634DBBC-1E9D-986A-E9DE-407B5D6277E2}</Project>
       <Name>Unity.Timeline</Name>
@@ -671,9 +682,25 @@
       <Project>{F58A38E2-9ED9-E24C-3365-97D82D267C88}</Project>
       <Name>Unity.TextMeshPro</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.Subsystem.Registration.csproj">
+      <Project>{69E1B84A-B032-E39E-D9D0-2845C4E0331F}</Project>
+      <Name>Unity.Subsystem.Registration</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.csproj">
       <Project>{FE020369-B176-B123-CA96-AA87C4BF0562}</Project>
       <Name>UnityEngine.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.SpatialTracking.csproj">
+      <Project>{C10876AC-4CF6-8CCD-1E21-3663541C38A7}</Project>
+      <Name>UnityEngine.SpatialTracking</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityEngine.XR.LegacyInputHelpers.csproj">
+      <Project>{085C6FB5-7923-564B-9848-9C2323FF2B8C}</Project>
+      <Name>UnityEngine.XR.LegacyInputHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.XR.Management.csproj">
+      <Project>{AE015C00-FC6F-34D7-025F-68FFCD396D6E}</Project>
+      <Name>Unity.XR.Management</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
