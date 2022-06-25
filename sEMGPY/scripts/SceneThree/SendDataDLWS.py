@@ -3,18 +3,30 @@ import numpy as np
 import socket
 import time
 import datetime
-import joblib
 import warnings
 warnings.filterwarnings(action="ignore")
 
 from pyomyo import Myo, emg_mode
 
+from tsai.inference import load_learner
 
-# 加载机器学习模型
-MLModels = joblib.load('models/sEMGML.pkl')
+import os, sys
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+import warnings
+warnings.filterwarnings(action="ignore")
+
+# 加载深度学习模型
+DLModels = {}
+DLModels['30LSTM'] = load_learner('models/30LSTMRegression.pkl', cpu=False)
+DLModels['31LSTM'] = load_learner('models/31LSTMRegression.pkl', cpu=False)
+DLModels['32LSTM'] = load_learner('models/32LSTMRegression.pkl', cpu=False)
+DLModels['33MLSTM_FCN'] = load_learner('models/33MLSTM_FCNRegression.pkl', cpu=False)
+
 # 初始化最优权重值
-MLWeight = np.array([0.42, 0.04, 0.14, 0.11, 0.09, 0.2])
+DLWeight = np.array([0.15, 0.25, 0.28, 0.32], dtype=np.float)
 
+# 滑动窗口矫正
+DL_Corr = 1.1338749861340824
 
 # 训练
 window_size = 23  # 滑动窗口大小为7
@@ -81,21 +93,21 @@ if __name__ == "__main__":
 
             d = list(q.get())
 
-            sEMG = np.array(d).reshape(1, -1)
+            sEMG = np.array(d, dtype=np.float).reshape(1, 1, 8)
 
-            # ML
-            MLResults = 0
-            for i, j in enumerate(MLModels):
-                MLResults += MLWeight[i] * MLModels[j].predict(sEMG)
+            DLResults = 0
+            for i, j in enumerate(DLModels):
+                _, _, preds = DLModels[j].get_X_preds(sEMG)
+                DLResults += DLWeight[i] * np.array(preds)
 
-            if MLResults > 1:
-                MLResults = 1
-            elif MLResults < 0:
-                MLResults = 0
+            if DLResults > 1:
+                DLResults = 1
+            elif DLResults < 0:
+                DLResults = 0
 
             # 先把数据填满
             if isWindowsEmpty:
-                window_slide[idx] = MLResults
+                window_slide[idx] = DLResults
                 idx += 1
 
                 if idx == window_size:
@@ -105,7 +117,7 @@ if __name__ == "__main__":
                     continue
 
             # 投票算法
-            window_slide[(idx + half_window_size) % window_size] = MLResults
+            window_slide[(idx + half_window_size) % window_size] = DLResults
 
             window_slide[idx] *= window_weight[0]
 
@@ -113,7 +125,7 @@ if __name__ == "__main__":
                 window_slide[idx] += window_slide[(idx + i) % window_size] * window_weight[i]
 
             # 发送过去
-            value = round(window_slide[idx].item(), 2)
+            value = round((window_slide[idx].item() - 0.5) * DL_Corr + 0.5 , 2)
             client_executor.send(bytes(repr(value).encode('utf-8')))
             msg = client_executor.recv(1024).decode('utf-8')
 

@@ -1,9 +1,14 @@
+import time
 import numpy as np
 import pandas as pd
 
+# import data
 import joblib
 
 import os
+
+from matplotlib import pyplot as plt
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import warnings
 warnings.filterwarnings(action="ignore")
@@ -50,7 +55,6 @@ MLModels = joblib.load(PATH + 'models/sEMGML.pkl')
 # 初始化最优权重值
 MLWeight = np.array([0.42, 0.04, 0.14, 0.11, 0.09, 0.2])
 
-
 # %%
 def R2Score(YTrue, YPre):
     u = ((YTrue - YPre) ** 2).sum()
@@ -58,24 +62,29 @@ def R2Score(YTrue, YPre):
     return 1 - u / v
 
 # %% 训练
-results = np.zeros((100, 1))
-for ii in range(3, 100, 2):
-    valid_labels = np.array(valid_labels)
-    window_size = ii  # 滑动窗口大小为7
+results = np.array((100, 1))
+test_labels = np.array(test_labels, dtype=np.float16)
+test_features = test_features
+
+ML_Corr = 1.1169662217712004
+
+for ii in range(21, 22, 2):
+
+    window_size = ii  # 滑动窗口大小
     half_window_size = window_size // 2
     window_weight = np.array([1 / ii for i in range(0, ii)])
 
     idx = 0
     window_slide = np.zeros(window_weight.shape)
-    re = np.zeros(valid_labels.shape)
+    re = np.zeros(test_labels.shape)
     re_idx = 0
 
     isWindowsEmpty = True
 
-    t = 10
+    start = time.perf_counter()
 
-    for index, row in valid_features.iterrows():
-        sEMG = np.array(row).reshape(1, -1)
+    for index, row in test_features.iterrows():
+        sEMG = np.array(row, dtype=np.float).reshape(1, -1)
 
         # ML
         MLResults = 0
@@ -115,8 +124,8 @@ for ii in range(3, 100, 2):
         re_idx += 1
 
         # print(re_idx)
-        if re_idx == valid_features.shape[0] - half_window_size:
-            while re_idx < valid_features.shape[0]:
+        if re_idx == test_labels.shape[0] - half_window_size:
+            while re_idx < test_labels.shape[0]:
                 idx = (idx + 1) % window_size
                 re[re_idx] = window_slide[idx].item()
                 re_idx += 1
@@ -126,9 +135,24 @@ for ii in range(3, 100, 2):
         else:
             idx = 0
 
-    results[ii] = R2Score(valid_labels, re)
-    print(ii, results[ii])
+    re = (re - 0.5) * ML_Corr + 0.5  # 修正结果
+
+    # results[ii] = R2Score(test_labels, re)  # 循环i
+    results = R2Score(test_labels, re)  # 单个i
+
+    end = time.perf_counter()
+    print("time consuming : {:.4f}ms".format((end - start) * 1000))
+
+    # print(ii, results[ii]) # 循环i
+    print(ii, results)  # 单个i
 
 
 # %%
-R2Score(valid_labels, re)
+plt.figure()
+plt.plot(np.arange(len(test_labels)), test_labels,'go-',label='True Value')
+plt.plot(np.arange(len(test_labels)), re, 'ro-',label='Predict Value')
+# plt.title(f'{name} score: {score}')
+plt.xlabel = "Samples"
+plt.ylabel = "Angle of Rotation"
+plt.legend()
+plt.show()

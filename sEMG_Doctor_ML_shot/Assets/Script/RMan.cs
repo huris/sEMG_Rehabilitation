@@ -34,7 +34,7 @@ public class RMan : MonoBehaviour
         slider = transform.Find("Canvas/Slider").GetComponent<Slider>();
         sliderImage = transform.Find("Canvas/SliderImage").GetComponent<Image>();
 
-        transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().onValueChanged.AddListener(delegate {
+        transform.Find("CanvasN/SpeedSlider").GetComponent<Slider>().onValueChanged.AddListener(delegate {
             SpeedSliderChange();
         });
 
@@ -78,13 +78,13 @@ public class RMan : MonoBehaviour
         sliderImage.fillAmount = Value / 2;
 
         // 测试用, 之后删
-        //DataManager.instance.RsEMGData.Add(Value);
-        //ChangeLeg(Value);
+        DataManager.instance.RsEMGData.Add(Value);
+        ChangeLeg(Value);
     }
 
     public void SpeedSliderChange()
     {
-        FrameMax = (int)(300 - transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().value * 200);
+        FrameMax = (int)(300 - transform.Find("CanvasN/SpeedSlider").GetComponent<Slider>().value * 200);
         PLUS = -1;
         Now = 0;
 

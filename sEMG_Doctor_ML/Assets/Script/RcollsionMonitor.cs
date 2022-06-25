@@ -20,12 +20,12 @@ public class RcollsionMonitor : MonoBehaviour
     void OnEnable()
     {
         rgd = GetComponent<Rigidbody>(); //获取球体上的刚体组件
-        wallforce = -17f;
-        footforce = 17f;
+        wallforce = -18f;
+        footforce = 18f;
         force = wallforce;
 
-        wallgravity = -3f;
-        footgravity = 20f;
+        wallgravity = 0f;
+        footgravity = 0f;
         gravity = wallgravity;
 
         willLaunch = false;
@@ -37,18 +37,18 @@ public class RcollsionMonitor : MonoBehaviour
         //float v = Input.GetAxis("Vertical"); //垂直方向 对应↑ ↓ 
         ////rgd.AddForce(new Vector3(h, 0, v) * speed);//给刚体施加一个力就可以运动了,添加一个方向即可
 
-        //print(force);
+        //print(willLaunch);
 
         if (willLaunch)
         {
-            int num = DataManager.instance.LsEMGData.Count;
-            //if (num > 0 && DataManager.instance.LsEMGData.Last() > 0.4f)
-            if (num > 0 && DataManager.instance.LsEMGData.Last() < 0.4f)
+            int num = DataManager.instance.RsEMGData.Count;
+            if (num > 0 && DataManager.instance.RsEMGData.Last() > 0.4f)
+                //if (num > 0 && DataManager.instance.RsEMGData.Last() < 0.4f)
             {
                 int n = Mathf.Min(7, num);
                 while(n > 1)
                 {
-                    if (DataManager.instance.RsEMGData[num - n] < DataManager.instance.RsEMGData[num - n + 1])
+                    if (DataManager.instance.RsEMGData[num - n] > DataManager.instance.RsEMGData[num - n + 1])
                     {
                         //print(DataManager.instance.RsEMGData[num - n] + " " + DataManager.instance.RsEMGData[num - n + 1]);
                         break;

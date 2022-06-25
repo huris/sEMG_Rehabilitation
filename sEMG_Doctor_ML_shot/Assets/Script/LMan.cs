@@ -33,7 +33,7 @@ public class LMan : MonoBehaviour
         slider = transform.Find("Canvas/Slider").GetComponent<Slider>();
         sliderImage = transform.Find("Canvas/SliderImage").GetComponent<Image>();
         
-        transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().onValueChanged.AddListener(delegate {
+        transform.Find("CanvasN/SpeedSlider").GetComponent<Slider>().onValueChanged.AddListener(delegate {
             SpeedSliderChange();
         });
 
@@ -78,14 +78,14 @@ public class LMan : MonoBehaviour
 
         // 测试用, 之后删
 
-        //DataManager.instance.LsEMGData.Add(Value);
-        //ChangeLeg(Value);
+        DataManager.instance.LsEMGData.Add(Value);
+        ChangeLeg(Value);
 
     }
 
     public void SpeedSliderChange()
     {
-        FrameMax = (int)(300 - transform.Find("Canvas/SpeedSlider").GetComponent<Slider>().value * 200);
+        FrameMax = (int)(300 - transform.Find("CanvasN/SpeedSlider").GetComponent<Slider>().value * 200);
         PLUS = -1;
         Now = 0;
 
