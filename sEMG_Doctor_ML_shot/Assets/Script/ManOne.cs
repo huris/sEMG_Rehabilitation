@@ -72,7 +72,7 @@ public class ManOne : MonoBehaviour
 
     void FixedUpdate()
     {
-        //GetMessage();
+        // GetMessage();
     }
 
     public void isLMoveButtonChange()
