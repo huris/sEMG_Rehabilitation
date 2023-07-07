@@ -1,6 +1,6 @@
 ## sEMG Rehabilitation
 
-This repository holds the code implementation of 《Interactive Virtual Ankle Movement System based on Wrist sEMG Improves Motor Imagery: An Exploratory Study》.
+This repository holds the code implementation of 《Interactive Virtual Ankle Movement Controlled by Wrist sEMG Improves Motor Imagery: An Exploratory Study》.
 
 The folder `sEMG_Rehabilitation` is used for collecting training datasets.
 
